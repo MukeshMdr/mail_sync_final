@@ -1,0 +1,12 @@
+Step 1 - Install the necessary Python packages- 
+
+! pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pymongo
+
+step 2 - Generate and save the file as "credentials.json" from gmail api.
+	 follow - "https://developers.google.com/gmail/api/quickstart/python"
+
+
+step 3 -  Make required changes in utils.py 
+
+
+Step 4 - sRun attch2.py 
