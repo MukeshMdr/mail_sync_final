@@ -5,12 +5,12 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 from googleapiclient.errors import HttpError
-# import html2text
 from pdf2txt import convert_pdf_to_txt
 import os
 import base64
 from googleapiclient.errors import HttpError
 from pymongo import MongoClient
+from utils import medical_keywords, Mongo_client, Mongo_database, Mongo_collection
 
 
 credentials_file_path = 'credentials.json'
@@ -29,19 +29,16 @@ def authenticate_gmail_api():
             flow = InstalledAppFlow.from_client_secrets_file(
                 credentials_file_path, SCOPES)
             creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
     return creds
 
-medical_keywords = ["health", "medical", "doctor", "prescription", "treatment", "appointment", "diagnosis", "clinic"]
 
 def download_attachments(service, msg_id, download_dir):
     try:
-        # Initialize MongoDB connection
-        client = MongoClient('mongodb+srv://mukesh:347qkpRJ2kpNrD1O@mydigirecords0.adupo8x.mongodb.net/')  # Update with your MongoDB connection string
-        db = client['Mail_Sync']  # Update with your database name
-        collection = db['attachments']
+        client = MongoClient(Mongo_client)
+        db = client[Mongo_database] 
+        collection = db[Mongo_collection]
         
         message = service.users().messages().get(userId='me', id=msg_id).execute()
         from_address = message['payload']['headers'][0]['value']
