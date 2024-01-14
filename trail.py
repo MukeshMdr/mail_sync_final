@@ -7,6 +7,7 @@ from google.auth.transport.requests import Request
 from googleapiclient.errors import HttpError
 from pdf2txt import convert_pdf_to_txt
 from pymongo import MongoClient
+from datetime import datetime, timedelta
 from utils import medical_keywords, Mongo_client, Mongo_database, Mongo_collection
 import shutil
 
@@ -116,7 +117,10 @@ def main():
     service = build('gmail', 'v1', credentials=creds)
 
     try:
-        results = service.users().messages().list(userId='me', labelIds=['INBOX']).execute()
+                # Set the specific date from which you want to check emails (in this example, "2024-01-10")
+        specific_date = "2024-01-13"
+
+        results = service.users().messages().list(userId='me', labelIds=['INBOX'], q=f'after:{specific_date}').execute()
         messages = results.get('messages', [])
 
         download_dir = 'Med_email'
